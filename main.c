@@ -10,9 +10,9 @@ int main(){
 	while((unCaracter = getchar()) != EOF){ 	/* Lee hasta que llega al EOF */
 		ungetc(unCaracter, stdin); 				/* Entré, entonces no es EOF. Devuelve el char.*/
 
-		lexicalCategory_t categoriaLexica = leerToken();
+		lexicalCategory_t categoriaLexica = readToken();
 
-		switch(categoriaLexica)
+		switch(categoriaLexica){
 			case IDENTIFICADOR:
 				cantidadIdentificadores++;
 				printf("IDENTIFICADOR\n");
@@ -25,6 +25,7 @@ int main(){
 				cantidadErrores++;
 				printf("ERROR\n");
 				break;
+		}
 	}
 
 	printf("IDENTIFICADORES: %d\n", cantidadIdentificadores);
