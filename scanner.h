@@ -8,13 +8,13 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-/* defines the longest word allowed */
+/* define el tamaño maximo de la string */
 #define MAXWORDLENGTH 100
 
-/* enumartion type for the lexical categories recognized */
+/* enumera las posibles categorias lexicas */
 typedef enum{IDENTIFICADOR, CONSTANTE, ERROR} lexicalCategory_t;
 
-/* reads a word and returns its lexicalCategory */
+/* lee una palabra y retorna su categoría léxica */
 lexicalCategory_t readToken();
 
 #endif /* SCANNER_H_ */

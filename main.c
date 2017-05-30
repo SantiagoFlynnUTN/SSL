@@ -1,28 +1,34 @@
 #include <stdio.h>
 #include "scanner.h"
 
-static int tokensRead[3] = {0,0,0};
+static int cantidadIdentificadores = 0;
+static int cantidadConstantesEnteras = 0;
+static int cantidadErrores = 0;
 
 int main(){
-	char control;
-	while((control = getchar()) != EOF){ /* checks if there is more input */
-		ungetc(control, stdin); /* returns a char to standard input */
+	char unCaracter;
+	while((unCaracter = getchar()) != EOF){ 	/* Lee hasta que llega al EOF */
+		ungetc(unCaracter, stdin); 				/* Entré, entonces no es EOF. Devuelve el char.*/
 
-		lexicalCategory_t lexicalCategory = readToken();
+		lexicalCategory_t categoriaLexica = leerToken();
 
-		if(lexicalCategory == IDENTIFICADOR){
-			tokensRead[0]++;
-			printf("IDENTIFICADOR\n");
-		}else if(lexicalCategory == CONSTANTE){
-			tokensRead[1]++;
-			printf("CONSTANTE ENTERA\n");
-		}else{
-			tokensRead[2]++;
-			printf("ERROR\n");
-		}
+		switch(categoriaLexica)
+			case IDENTIFICADOR:
+				cantidadIdentificadores++;
+				printf("IDENTIFICADOR\n");
+				break;
+			case CONSTANTE:
+				cantidadConstantesEnteras++;
+				printf("CONSTANTE ENTERA\n");
+				break;
+			case ERROR:
+				cantidadErrores++;
+				printf("ERROR\n");
+				break;
 	}
 
-	printf("IDENTIFICADORES: %d\n", tokensRead[0]);
-	printf("CONSTANTES ENTERAS: %d\n", tokensRead[1]);
-	printf("ERRORES: %d\n", tokensRead[2]);
+	printf("IDENTIFICADORES: %d\n", cantidadIdentificadores);
+	printf("CONSTANTES ENTERAS: %d\n", cantidadConstantesEnteras);
+	printf("ERRORES: %d\n", cantidadErrores);
+	return 0;
 }
