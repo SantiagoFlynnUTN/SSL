@@ -14,7 +14,7 @@ void mostrarCategoriaLexica(lexicalCategory_t estado){
 	switch (estado){
 		case SPACE: printf("\nNo se encontraron más tokens para leer\n");
 		break;
-		case IDENTIFICADOR: printf("\nIdentificador\n");
+		case IDENTIFICADOR: printf("\nIdentificador.\n");
 		break;
 		case CONSTANTE: printf("\nConstante.\n");
 		break;
