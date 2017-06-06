@@ -10,15 +10,15 @@ char matrizDeEstados[4][5] = {
 		{11, 11, 11, 3, 11}
 };
 
-void mostrarCategoriaLexica(lexicalCategory_t estado, lexicalCategory_t * tipoToken){
+void mostrarCategoriaLexica(lexicalCategory_t estado){
 	switch (estado){
 		case SPACE: printf("\nNo se encontraron más tokens para leer\n");
 		break;
-		case IDENTIFICADOR: printf("\nIdentificador. Total: %i\n", tipoToken[IDENTIFICADOR]);
+		case IDENTIFICADOR: printf("\nIdentificador\n");
 		break;
-		case CONSTANTE: printf("\nConstante. Total: %i\n", tipoToken[CONSTANTE]);
+		case CONSTANTE: printf("\nConstante.\n");
 		break;
-		case ERROR: printf("\nError. Total: %i\n", tipoToken[ERROR]);
+		case ERROR: printf("\nError.\n");
 		break;
 	}
 }
@@ -40,7 +40,7 @@ int main(){
 			tipoToken[estadoAnterior]++;
 		}
 
-		mostrarCategoriaLexica(estadoAnterior, tipoToken);
+		mostrarCategoriaLexica(estadoAnterior);
 	}
 
 	printf("IDENTIFICADORES: %d\n", tipoToken[IDENTIFICADOR]);
