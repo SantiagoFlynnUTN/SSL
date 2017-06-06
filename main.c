@@ -1,4 +1,4 @@
-#include <stdio.h>
+
 #include "scanner.h"
 
 static int cantidadIdentificadores = 0;
