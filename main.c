@@ -1,35 +1,34 @@
 #include <stdio.h>
 #include "scanner.h"
 
-static int cantidadIdentificadores = 0;
-static int cantidadConstantesEnteras = 0;
-static int cantidadErrores = 0;
+static int tipoToken[4] = {0,0,0,0};
+
+
+
+void mostrarCategoriaLexica(lexicalCategory_t estado){
+	switch (estado){
+		case IDENTIFICADOR: printf("\nIdentificador.\n");
+		break;
+		case CONSTANTE: printf("\nConstante.\n");
+		break;
+		case ERROR: printf("\nError.\n");
+		break;
+		default: printf("\nNo se encontraron más tokens para leer\n");
+	}
+}
 
 int main(){
-	char unCaracter;
-	while((unCaracter = getchar()) != EOF){ 	/* Lee hasta que llega al EOF */
-		ungetc(unCaracter, stdin); 				/* Entré, entonces no es EOF. Devuelve el char.*/
+	stdin = fopen("cadenas.txt", "r");
+	lexicalCategory_t token = INICIO;
+	while(token != FINARCHIVO){	//lee el flujo de bytes
+		token = readToken();
 
-		lexicalCategory_t categoriaLexica = readToken();
-
-		switch(categoriaLexica){
-			case IDENTIFICADOR:
-				cantidadIdentificadores++;
-				printf("IDENTIFICADOR\n");
-				break;
-			case CONSTANTE:
-				cantidadConstantesEnteras++;
-				printf("CONSTANTE ENTERA\n");
-				break;
-			case ERROR:
-				cantidadErrores++;
-				printf("ERROR\n");
-				break;
-		}
+		tipoToken[token]++;
+		mostrarCategoriaLexica(token);
 	}
 
-	printf("IDENTIFICADORES: %d\n", cantidadIdentificadores);
-	printf("CONSTANTES ENTERAS: %d\n", cantidadConstantesEnteras);
-	printf("ERRORES: %d\n", cantidadErrores);
+	printf("IDENTIFICADORES: %d\n", tipoToken[IDENTIFICADOR]);
+	printf("CONSTANTES ENTERAS: %d\n", tipoToken[CONSTANTE]);
+	printf("ERRORES: %d\n", tipoToken[ERROR]);
 	return 0;
 }
