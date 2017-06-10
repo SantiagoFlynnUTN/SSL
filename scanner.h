@@ -11,10 +11,12 @@
 /* define el tamaño maximo de la string */
 #define MAXWORDLENGTH 100
 
-/* enumera las posibles categorias lexicas */
-typedef enum{IDENTIFICADOR, CONSTANTE, ERROR} lexicalCategory_t;
+#define ESTADOSACEPTORES 10
 
-/* lee una palabra y retorna su categoría léxica */
+/* enumera las posibles categorias lexicas */
+typedef enum{FINARCHIVO, IDENTIFICADOR, CONSTANTE, ERROR, INICIO} lexicalCategory_t;
+
+
 lexicalCategory_t readToken();
 
 #endif /* SCANNER_H_ */

@@ -2,69 +2,49 @@
 #include <ctype.h>
 #include "scanner.h"
 
-static char word[MAXWORDLENGTH];
+typedef enum{ESPACIO, ID, NUMERO, OTRO, FINAL, ESTADOFINAL = 10, ESTADOIDENTIFICADOR, ESTADOCONSTANTE, ESTADOERROR} estados_t;
 
-static char * _readWord();
-static lexicalCategory_t _checkToken(char * word);
-static int _isIntegerConstant(char * word);
-static int _isIdentifier(char * word);
+static char _matrizDeEstados[4][5] = {
+		{ESPACIO, 				ID, 				NUMERO, 		OTRO, 					ESTADOFINAL},
+		{ESTADOIDENTIFICADOR, 	ID, 				ID, 			ESTADOIDENTIFICADOR, 	ESTADOIDENTIFICADOR},
+		{ESTADOCONSTANTE, 		ESTADOCONSTANTE, 	NUMERO, 		ESTADOCONSTANTE, 		ESTADOCONSTANTE},
+		{ESTADOERROR, 			ESTADOERROR, 		ESTADOERROR, 	OTRO, 					ESTADOERROR}
+};
 
-/* lee del standard input hasta que un espacio o EOF aparece.
- * retorna el puntero a la palabra que encontró.
- */
+estados_t _tipoCaracter(char c);
+int _estadoConCentinela(estados_t estado);
+lexicalCategory_t _estadoToToken(estados_t estado);
 
-static char * _readWord(){
-	int i = 0;
-
-	while(i < MAXWORDLENGTH && !isspace(word[i] = getchar()) && word[i++] != EOF)
-		;
-
-	word[i] = '\0';
-	return word;
+/* Devuelve el lexema al que pertenece el caracter*/
+estados_t _tipoCaracter(char c){
+	int tipoChar = OTRO;
+	if (isspace(c)) tipoChar = ESPACIO;
+	if (islower(c)) tipoChar = ID;
+	if (isdigit(c)) tipoChar = NUMERO;
+	if (c == EOF) tipoChar = FINAL;
+	return tipoChar;
 }
 
-
-/* Lee una palabra y retorna su categoría léxica */
 lexicalCategory_t readToken(){
-	return _checkToken(_readWord());
+	estados_t estadoActual = 0;
+	char c;
+	while(estadoActual < ESTADOSACEPTORES){	//lee cada token
+		c = getchar();
+		estadoActual = _matrizDeEstados[estadoActual][_tipoCaracter(c)];
+	}
+
+	if (_estadoConCentinela(estadoActual)){
+		ungetc(c, stdin);
+	}
+
+	return _estadoToToken(estadoActual);
+}
+
+int _estadoConCentinela(estados_t estado){
+	return estado - ESTADOSACEPTORES;
 }
 
 
-/* retorna la categoría lexica de la palabra apuntada como parámetro
- */
-static lexicalCategory_t _checkToken(char * word){
-	if(_isIdentifier(word)){
-		return IDENTIFICADOR;
-	}
-
-	if(_isIntegerConstant(word)){
-		return CONSTANTE;
-	}
-
-	return ERROR;
-}
-
-
-/* chequea si la palabra aputnada por el parametro es una constante entera.
- * return 0 si no lo es.
- */
-static int _isIntegerConstant(char * word){
-	while(isdigit(*word) && *(word++) != '\0')
-		;
-
-	return *word == '\0';
-}
-
-/* chequea si la palabra aputnada por el parametro es un identificador.
- * return 0 si no.
- * un identificador debe empezar con una letra minuscula y seguirle (opcionalmente) otra minuscula o un dígito.
- */
-
-static int _isIdentifier(char * word){
-	if(islower(*word)){
-		while((isdigit(*word) || islower(*word)) && *(word++) != '\0')
-			;
-	}
-
-	return *word == '\0';
+lexicalCategory_t _estadoToToken(estados_t estado){
+	return estado - ESTADOSACEPTORES;
 }
